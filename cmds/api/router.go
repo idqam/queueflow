@@ -9,5 +9,6 @@ import (
 func NewRouter() http.Handler {
 	r := chi.NewRouter()
 	r.Get("/health", HealthCheck)
+	r.Get("/ping", Ping)
 	return r
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/http/httptest"
 
 	"owen/queueflow/internal/config"
 
@@ -27,6 +28,17 @@ func main() {
 	} else {
 		log.Printf("starting API with config:\n%s", string(cfgJson))
 	}
+
+
+	pingReq := httptest.NewRequest(http.MethodGet, "/ping", nil)
+	pingResp := httptest.NewRecorder()
+	Ping(pingResp, pingReq)
+	if pingResp.Code != http.StatusOK || pingResp.Body.String() != "pong" {
+		log.Fatalf("ping health check failed: code=%d body=%q", pingResp.Code, pingResp.Body.String())
+	}
+	log.Printf("ping endpoint check passed")
+
+
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", cfg.ServerPort),
