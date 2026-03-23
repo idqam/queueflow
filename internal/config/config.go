@@ -2,7 +2,7 @@ package config
 
 import (
 	"log"
-	"owen/queueflow/env"
+	"owen/queueflow/internal/env"
 	"strconv"
 	"strings"
 	"time"
