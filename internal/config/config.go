@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"owen/queueflow/env"
 	"strconv"
 	"strings"
@@ -39,6 +40,7 @@ func Load() (*Config, error) {
 			config.ServerPort = 8080
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] SERVER_PORT not set, using default: 8080")
 		config.ServerPort = 8080
 	}
 
@@ -49,22 +51,26 @@ func Load() (*Config, error) {
 
 	config.DatabaseURL = env.DatabaseURL.GetValue()
 	if config.DatabaseURL == "" {
+		log.Printf("[NON-BLOCK ERROR] DATABASE_URL not set, using default: postgres://user:pass@localhost:5432/queueflow")
 		config.DatabaseURL = "postgres://user:pass@localhost:5432/queueflow"
 	}
 
 	if val := env.KafkaBrokers.GetValue(); val != "" {
 		config.KafkaBrokers = strings.Split(val, ",")
 	} else {
+		log.Printf("[NON-BLOCK ERROR] KAFKA_BROKERS not set, using default: [localhost:9092]")
 		config.KafkaBrokers = []string{"localhost:9092"}
 	}
 
 	config.KafkaGroupID = env.KafkaGroupID.GetValue()
 	if config.KafkaGroupID == "" {
+		log.Printf("[NON-BLOCK ERROR] KAFKA_GROUP_ID not set, using default: queueflow-group")
 		config.KafkaGroupID = "queueflow-group"
 	}
 
 	config.RedisURL = env.RedisURL.GetValue()
 	if config.RedisURL == "" {
+		log.Printf("[NON-BLOCK ERROR] REDIS_URL not set, using default: redis://localhost:6379")
 		config.RedisURL = "redis://localhost:6379"
 	}
 
@@ -75,6 +81,7 @@ func Load() (*Config, error) {
 			config.WorkerHrbeatTTL = 30 * time.Second
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] WORKER_HEARTBEAT_TTL not set, using default: 30s")
 		config.WorkerHrbeatTTL = 30 * time.Second
 	}
 
@@ -85,6 +92,7 @@ func Load() (*Config, error) {
 			config.WorkerHrBeatInterval = 10 * time.Second
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] WORKER_HEARTBEAT_INTERVAL not set, using default: 10s")
 		config.WorkerHrBeatInterval = 10 * time.Second
 	}
 
@@ -95,6 +103,7 @@ func Load() (*Config, error) {
 			config.JobsPerWorkerTarget = 10
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] JOBS_PER_WORKER_TARGET not set, using default: 10")
 		config.JobsPerWorkerTarget = 10
 	}
 
@@ -105,6 +114,7 @@ func Load() (*Config, error) {
 			config.MinReplicas = 1
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] MIN_REPLICAS not set, using default: 1")
 		config.MinReplicas = 1
 	}
 
@@ -115,6 +125,7 @@ func Load() (*Config, error) {
 			config.MaxReplicas = 10
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] MAX_REPLICAS not set, using default: 10")
 		config.MaxReplicas = 10
 	}
 
@@ -125,6 +136,7 @@ func Load() (*Config, error) {
 			config.ScaleUpCooldown = 60 * time.Second
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] SCALE_UP_COOLDOWN not set, using default: 60s")
 		config.ScaleUpCooldown = 60 * time.Second
 	}
 
@@ -135,6 +147,7 @@ func Load() (*Config, error) {
 			config.ScaleDownCooldown = 120 * time.Second
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] SCALE_DOWN_COOLDOWN not set, using default: 120s")
 		config.ScaleDownCooldown = 120 * time.Second
 	}
 
@@ -145,16 +158,19 @@ func Load() (*Config, error) {
 			config.AutoscalerInterval = 30 * time.Second
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] AUTOSCALER_INTERVAL not set, using default: 30s")
 		config.AutoscalerInterval = 30 * time.Second
 	}
 
 	config.WorkerDeployment = env.WorkerDeployment.GetValue()
 	if config.WorkerDeployment == "" {
+		log.Printf("[NON-BLOCK ERROR] WORKER_DEPLOYMENT not set, using default: queueflow-worker")
 		config.WorkerDeployment = "queueflow-worker"
 	}
 
 	config.WorkerNamespace = env.WorkerNamespace.GetValue()
 	if config.WorkerNamespace == "" {
+		log.Printf("[NON-BLOCK ERROR] WORKER_NAMESPACE not set, using default: default")
 		config.WorkerNamespace = "default"
 	}
 
@@ -165,6 +181,7 @@ func Load() (*Config, error) {
 			config.MetricsPort = 9090
 		}
 	} else {
+		log.Printf("[NON-BLOCK ERROR] METRICS_PORT not set, using default: 9090")
 		config.MetricsPort = 9090
 	}
 
