@@ -14,6 +14,7 @@ const (
  DatabaseURL            EnvKey = "DATABASE_URL"
  KafkaBrokers           EnvKey = "KAFKA_BROKERS"
  KafkaGroupID           EnvKey = "KAFKA_GROUP_ID"
+ KafkaTopic 			EnvKey = "DUMMY"
  RedisURL               EnvKey = "REDIS_URL"
  WorkerHeartbeatTTL     EnvKey = "WORKER_HEARTBEAT_TTL"
  WorkerHeartbeatInterval EnvKey = "WORKER_HEARTBEAT_INTERVAL"

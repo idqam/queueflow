@@ -15,6 +15,7 @@ type Config struct {
 	DatabaseURL string
 	KafkaBrokers []string 
 	KafkaGroupID string
+	KafkaTopic string
 	RedisURL string
 	WorkerHrbeatTTL time.Duration
 	WorkerHrBeatInterval time.Duration
@@ -183,6 +184,11 @@ func Load() (*Config, error) {
 	} else {
 		log.Printf("[NON-BLOCK ERROR] METRICS_PORT not set, using default: 9090")
 		config.MetricsPort = 9090
+	}
+
+	config.KafkaTopic = env.KafkaTopic.GetValue()
+	if config.KafkaTopic == "" {
+		config.KafkaTopic = "DUMMY"
 	}
 
 	return config, nil
