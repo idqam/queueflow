@@ -247,6 +247,12 @@ func (q *Queries) IncrementWorkerJobsProcessed(ctx context.Context, workerID str
 	return err
 }
 
+func (q *Queries) CountDeadJobs(ctx context.Context) (int64, error) {
+	var count int64
+	err := q.pool.QueryRow(ctx, `SELECT COUNT(*) FROM jobs WHERE status = 'DEAD'`).Scan(&count)
+	return count, err
+}
+
 func (q *Queries) ListWorkers(ctx context.Context) ([]models.Worker, error) {
 	rows, err := q.pool.Query(ctx, `
 		SELECT id, status, jobs_processed, last_heartbeat, started_at FROM workers ORDER BY started_at DESC`)

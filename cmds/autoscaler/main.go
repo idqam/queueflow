@@ -1,13 +1,14 @@
-package autoscaler
+package main
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"owen/queueflow/internal/autoscaler"
 	"owen/queueflow/internal/config"
 	"owen/queueflow/internal/kafka"
 	"owen/queueflow/internal/telemetry"
@@ -29,20 +30,20 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	k8sClient, err := NewK8sClient("", cfg.WorkerNamespace, cfg.WorkerDeployment)
+	k8sClient, err := autoscaler.NewK8sClient("", cfg.WorkerNamespace, cfg.WorkerDeployment)
 	if err != nil {
 		slog.Error("failed to initialize kubernetes client", "err", err)
 		os.Exit(1)
 	}
 
-	kafkaLagFetcher, err := NewKafkaFetcher(cfg.KafkaBrokers, cfg.KafkaGroupID, kafka.AllJobTopics)
+	kafkaLagFetcher, err := autoscaler.NewKafkaFetcher(cfg.KafkaBrokers, cfg.KafkaGroupID, kafka.AllJobTopics)
 	if err != nil {
 		slog.Error("failed to initialize kafka lag fetcher", "err", err)
 		os.Exit(1)
 	}
 
-	policy := NewScalingPolicy(cfg.JobsPerWorkerTarget, cfg.MinReplicas, cfg.MaxReplicas)
-	controller := NewController(kafkaLagFetcher, k8sClient, policy, cfg, nil)
+	policy := autoscaler.NewScalingPolicy(cfg.JobsPerWorkerTarget, cfg.MinReplicas, cfg.MaxReplicas)
+	controller := autoscaler.NewController(kafkaLagFetcher, k8sClient, policy, cfg, nil)
 
 	go func() {
 		if err := controller.Run(ctx); err != nil && err != context.Canceled {
@@ -60,7 +61,5 @@ func main() {
 	defer cancel()
 
 	<-shutdownCtx.Done()
-
 	slog.Info("autoscaler shutdown complete")
-	fmt.Println("autoscaler exiting")
 }
