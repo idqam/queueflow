@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: autoscaler
+  namespace: queueflow
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: queueflow-autoscaler
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: queueflow-autoscaler
+subjects:
+  - kind: ServiceAccount
+    name: autoscaler
+    namespace: queueflow
+roleRef:
+  kind: ClusterRole
+  name: queueflow-autoscaler
+  apiGroup: rbac.authorization.k8s.io
