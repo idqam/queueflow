@@ -1,2 +1,4 @@
 .env
-.md
+*.md
+!README.md
+!IMPLEMENTATION_GUIDE.md
